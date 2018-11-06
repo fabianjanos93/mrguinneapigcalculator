@@ -1,4 +1,4 @@
-package com.codecool.mrguinneapig.wotd.calculator;
+package com.codecool.mrguinneapig.calculator;
 
 import org.springframework.stereotype.Component;
 

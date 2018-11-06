@@ -1,4 +1,4 @@
-package com.codecool.mrguinneapig.wotd.calculator;
+package com.codecool.mrguinneapig.calculator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
