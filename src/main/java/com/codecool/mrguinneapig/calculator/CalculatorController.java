@@ -10,7 +10,7 @@ public class CalculatorController {
     @Autowired
     Calculator calculator;
 
-    @GetMapping("/calculate")
+    @PostMapping("/calculate")
     public Calculator calculator(@RequestParam("equation") String equation) {
 
         calculator.setEquation(equation);
