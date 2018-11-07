@@ -31,7 +31,7 @@ public class Calculator {
     }
 
     public void setEquation(String equation) {
-        this.equation = equation;
+        this.equation = equation.replace(" ","");
     }
 
     private void setSolvable(boolean solvable){
