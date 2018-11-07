@@ -19,7 +19,7 @@ public class CalculatorController {
         JSONParser parser = new JSONParser();
         JSONObject request = (JSONObject) parser.parse(body);
 
-        calculator.setEquation((String) request.get("name"));
+        calculator.setEquation((String) request.get("equation"));
         calculator.solve();
 
         return calculator;
