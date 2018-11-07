@@ -199,7 +199,12 @@ public class CalculatorApplicationTests {
         Assert.assertEquals(-80,calculator.solve());
     }
 
-
+    @Test
+    public void calculatorLotOfSpaces() {
+        calculator = new Calculator();
+        calculator.setEquation("   15 +  3 *  2   -   1 -  100     ");
+        Assert.assertEquals(-80,calculator.solve());
+    }
 
 
 
