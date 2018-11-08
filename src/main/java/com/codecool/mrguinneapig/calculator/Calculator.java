@@ -42,10 +42,20 @@ public class Calculator {
 
         ArrayList<String> partEquation = butcher(equation);
 
+        formalize(partEquation);
+
         if(braceletSolvable(partEquation)) {
             return solveRecStep(partEquation);
         }
         return 0;
+    }
+
+    public void formalize(ArrayList<String> toFormat) {
+        for(int i = 1 ; i<toFormat.size(); i++) {
+            if (toFormat.get(i).equals("(") && contains(toFormat.get(i-1),numbers)) {
+                toFormat.add(i,"*");
+            }
+        }
     }
 
     private ArrayList<String> butcher(String equation) {

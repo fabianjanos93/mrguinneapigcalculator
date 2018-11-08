@@ -249,6 +249,13 @@ public class CalculatorApplicationTests {
         Assert.assertEquals(80,calculator.solve());
     }
 
+    @Test
+    public void calculatorLazyWriting() {
+        calculator = new Calculator();
+        calculator.setEquation("3+4(2/2)");
+        Assert.assertEquals(7,calculator.solve());
+    }
+
 
 
 
