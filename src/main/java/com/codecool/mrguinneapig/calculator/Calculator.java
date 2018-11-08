@@ -100,7 +100,9 @@ public class Calculator {
                 return false;
             }
         }
-        solvable = braceletCounter == 0;
+        if (braceletCounter != 0){
+            setSolvable(false);
+        }
         return solvable;
     }
 
