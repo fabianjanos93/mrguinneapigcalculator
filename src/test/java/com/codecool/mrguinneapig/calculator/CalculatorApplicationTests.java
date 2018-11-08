@@ -175,37 +175,37 @@ public class CalculatorApplicationTests {
     @Test
     public void calculator15plus3multipy2minus1() {
         calculator.setEquation("15+3*2-1");
-        Assert.assertEquals(20,calculator.solve());
+        Assert.assertEquals(20,calculator.solve(),0.01);
     }
 
     @Test
     public void calculatorNegative15plus3multipy2minus1minus100() {
         calculator.setEquation("15+3*2-1-100");
-        Assert.assertEquals(-80,calculator.solve());
+        Assert.assertEquals(-80,calculator.solve(),0.01);
     }
 
     @Test
     public void calculatorLotOfSpaces() {
         calculator.setEquation("   15 +  3 *  2   -   1 -  100     ");
-        Assert.assertEquals(-80,calculator.solve());
+        Assert.assertEquals(-80,calculator.solve(),0.01);
     }
 
     @Test
     public void calculatorBraceletTest() {
         calculator.setEquation("(15)");
-        Assert.assertEquals(15,calculator.solve());
+        Assert.assertEquals(15,calculator.solve(),0.01);
     }
 
     @Test
     public void calculatorBraceletception() {
         calculator.setEquation("((((15))))");
-        Assert.assertEquals(15,calculator.solve());
+        Assert.assertEquals(15,calculator.solve(),0.01);
     }
 
     @Test
     public void calculatorComplicatedBracelet() {
         calculator.setEquation("((1+2)*(1+2)*(1+2))+1");
-        Assert.assertEquals(28,calculator.solve());
+        Assert.assertEquals(28,calculator.solve(),0.01);
     }
 
     @Test
@@ -225,16 +225,19 @@ public class CalculatorApplicationTests {
     @Test
     public void calculatorComplicatedBracelet2() {
         calculator.setEquation("((1+2+(1+2*2))*(1+2)*(1+2))+1+(3+2*2)");
-        Assert.assertEquals(80,calculator.solve());
+        Assert.assertEquals(80,calculator.solve(),0.01);
     }
 
     @Test
     public void calculatorLazyWriting() {
         calculator.setEquation("3+4(2/2)");
-        Assert.assertEquals(7,calculator.solve());
+        Assert.assertEquals(7,calculator.solve(),0.01);
     }
 
-
+    @Test
+    public void calculator() {
+        Assert.assertTrue(calculator.isNumeric("3.0"));
+    }
 
 
 

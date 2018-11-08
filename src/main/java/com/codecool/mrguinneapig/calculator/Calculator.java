@@ -10,7 +10,7 @@ public class Calculator {
 
     private String equation;
     private boolean solvable = true;
-    private int answer = 0;
+    private float answer = 0;
 
     private String[] numbers = new String[]{"0","1","2","3","4","5","6","7","8","9"};
     private String[] operators = new String[]{"*","/","+","-"};
@@ -22,12 +22,27 @@ public class Calculator {
         this.answer = answer;
     }
 
-    public int getAnswer() {
+    public float getAnswer() {
         return answer;
     }
 
     public boolean isSolvable() {
         return solvable;
+    }
+
+    public boolean isNumeric(String number) {
+        int commaCounter = 0;
+        ArrayList<String> temp = butcher(number);
+        for(int i =0 ; i< temp.size();i++) {
+            if ((!contains(temp.get(i),numbers) && !temp.get(i).equals("."))
+                    || (commaCounter>0 && temp.get(i).equals("."))){
+                return false; // nem szám és az első "."
+            }
+            else if (temp.get(i).equals(".")) {
+                commaCounter++;
+            }
+        }
+        return !(commaCounter == 1 && temp.size() == 1);
     }
 
     public void setEquation(String equation) {
@@ -38,7 +53,7 @@ public class Calculator {
         this.solvable = solvable;
     }
 
-    public int solve() {
+    public float solve() {
 
         this.solvable = true;
 
@@ -54,7 +69,7 @@ public class Calculator {
 
     public void formalize(ArrayList<String> toFormat) {
         for(int i = 1 ; i<toFormat.size(); i++) {
-            if (toFormat.get(i).equals("(") && contains(toFormat.get(i-1),numbers)) {
+            if (toFormat.get(i).equals("(") && isNumeric(toFormat.get(i-1))) {
                 toFormat.add(i,"*");
             }
         }
@@ -67,20 +82,20 @@ public class Calculator {
         return partEquation;
     }
 
-    public int solveRecStep(ArrayList<String> arrayedEquation) {
+    public float solveRecStep(ArrayList<String> arrayedEquation) {
         int i=0;
         while(i<arrayedEquation.size()) {
             if( arrayedEquation.get(i).equals("(") ){
                 int closingIndex = getClosingBraceletIndex(arrayedEquation,i);
                 ArrayList<String> recursiveArrayList = new ArrayList<>();
                 recursiveArrayList.addAll(arrayedEquation.subList(i+1,closingIndex));
-                int replacement = solveRecStep(recursiveArrayList);
+                float replacement = solveRecStep(recursiveArrayList);
                 int j = i;
                 while(j <= closingIndex) {
                     arrayedEquation.remove(i);
                     j++;
                 }
-                arrayedEquation.addAll(i,butcher(Integer.toString(replacement)));
+                arrayedEquation.add(i,Float.toString(replacement));
             }
             i++;
         }
@@ -130,14 +145,14 @@ public class Calculator {
         if(!braceletSolvable(butcheredEquation)){
             return false;
         }
-            if (butcheredEquation.stream().allMatch(element -> contains(element,numbers) || contains(element,operators))) {
+            if (butcheredEquation.stream().allMatch(element -> isNumeric(element) || contains(element,operators))) {
             boolean ans = true;
             ans = !(contains(butcheredEquation.get(0),operators) || contains(butcheredEquation.get(butcheredEquation.size()-1),operators));
             for (int i = 1; i < butcheredEquation.size()-1; i++) {
                 if(!ans)
                     break;
                 if ( contains(butcheredEquation.get(i),operators)) {
-                    ans = (contains(butcheredEquation.get(i-1),numbers) && contains(butcheredEquation.get(i+1),numbers));
+                    ans = isNumeric(butcheredEquation.get(i-1)) && isNumeric(butcheredEquation.get(i+1));
                 }
             }
             if (!ans)
@@ -157,7 +172,7 @@ public class Calculator {
         return false;
     }
 
-    public int solveSimple(ArrayList<String> partEquation){
+    public float solveSimple(ArrayList<String> partEquation){
         if (!solvable(partEquation))
             return 0;
 
@@ -168,20 +183,20 @@ public class Calculator {
             int i = 1;
             while (i < partEquation.size()) {
                 if (partEquation.get(i).equals(operator)) {
-                    int previousNumber = Integer.parseInt(partEquation.get(i - 1));
-                    int nextNumber = Integer.parseInt(partEquation.get(i + 1));
+                    float previousNumber = Float.parseFloat(partEquation.get(i - 1));
+                    float nextNumber = Float.parseFloat(partEquation.get(i + 1));
                     switch (operator) {
                         case "*":
-                            partEquation.set(i, (Integer.toString(previousNumber * nextNumber)));
+                            partEquation.set(i, (Float.toString(previousNumber * nextNumber)));
                             break;
                         case "/":
-                            partEquation.set(i, (Integer.toString(previousNumber / nextNumber)));
+                            partEquation.set(i, (Float.toString(previousNumber / nextNumber)));
                             break;
                         case "+":
-                            partEquation.set(i, (Integer.toString(previousNumber + nextNumber)));
+                            partEquation.set(i, (Float.toString(previousNumber + nextNumber)));
                             break;
                         case "-":
-                            partEquation.set(i, (Integer.toString(previousNumber - nextNumber)));
+                            partEquation.set(i, (Float.toString(previousNumber - nextNumber)));
                             break;
                     }
                     partEquation.remove(i + 1);
@@ -191,17 +206,17 @@ public class Calculator {
                 }
             }
         }
-        answer = Integer.parseInt(partEquation.get(0));
+        answer = Float.parseFloat(partEquation.get(0));
         return answer;
     }
 
     public void fromDigitToNumber(ArrayList<String> butcheredEquation) {
         int i = 0;
         while(i+1 < butcheredEquation.size()){
-            if(contains(butcheredEquation.get(i),numbers)) {
+            if(isNumeric(butcheredEquation.get(i))) {
                 int j = i + 1;
                 while ( i+1 < butcheredEquation.size()){
-                    if (!contains(butcheredEquation.get(j),numbers)) {
+                    if (!isNumeric(butcheredEquation.get(j))) {
                         break;
                     }
                     butcheredEquation.set(i, butcheredEquation.get(i)+butcheredEquation.get(j));
