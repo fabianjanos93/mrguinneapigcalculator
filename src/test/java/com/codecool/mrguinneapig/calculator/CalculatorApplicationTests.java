@@ -244,7 +244,24 @@ public class CalculatorApplicationTests {
         calculator.setEquation("1/3");
         Assert.assertEquals(0.333,calculator.solve(),0.001);
     }
-    
+
+    @Test
+    public void calculatorFloatRecognition2() {
+        calculator.setEquation("0.2");
+        Assert.assertEquals(0.2,calculator.solve(),0.1);
+    }
+
+    @Test
+    public void calculatorLazyFloat() {
+        calculator.setEquation(".5 + .1");
+        Assert.assertEquals(0.6,calculator.solve(),0.001);
+    }
+
+    @Test
+    public void calculatorDivOfFloats(){
+            calculator.setEquation(" .2 ( 0.1 / .5) + 7 (2 * .10000002)");
+        Assert.assertEquals(1.44,calculator.solve(),0.0001);
+    }
 
 
 }

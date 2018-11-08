@@ -68,6 +68,20 @@ public class Calculator {
     }
 
     public void formalize(ArrayList<String> toFormat) {
+        formalizeBracelets(toFormat);
+        formalizeLazyFloatsMinimalToWork(toFormat);
+    }
+
+    private void formalizeLazyFloatsMinimalToWork(ArrayList<String> toFormat) {
+        for(int i = 0; i<toFormat.size()-1;i++) {
+            if (toFormat.get(i).equals(".") && contains(toFormat.get(i+1),numbers)){
+                toFormat.set(i,toFormat.get(i) + toFormat.get(i+1));
+                toFormat.remove((int) i+1);
+            }
+        }
+    }
+
+    private void formalizeBracelets(ArrayList<String> toFormat) {
         for(int i = 1 ; i<toFormat.size(); i++) {
             if (toFormat.get(i).equals("(") && isNumeric(toFormat.get(i-1))) {
                 toFormat.add(i,"*");
