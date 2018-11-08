@@ -2,14 +2,14 @@ package com.codecool.mrguinneapig.calculator;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 @Component
 public class Calculator {
 
     private String equation;
-    private boolean solvable;
+    private boolean solvable = true;
     private int answer = 0;
 
     private String[] numbers = new String[]{"0","1","2","3","4","5","6","7","8","9"};
@@ -38,16 +38,92 @@ public class Calculator {
         this.solvable = solvable;
     }
 
-    public boolean solvable() {
-        String[] butcheredEquation = equation.split("");
-        if (Arrays.stream(butcheredEquation).allMatch(element -> contains(element,numbers) || contains(element,operators))) {
+    public int solve() {
+
+        ArrayList<String> partEquation = butcher(equation);
+
+        if(braceletSolvable(partEquation)) {
+            return solveRecStep(partEquation);
+        }
+        return 0;
+    }
+
+    private ArrayList<String> butcher(String equation) {
+        String[] arrayedEquation = equation.split("");
+        ArrayList<String> partEquation = new ArrayList<>();
+        partEquation.addAll(Arrays.asList(arrayedEquation));
+        return partEquation;
+    }
+
+    public int solveRecStep(ArrayList<String> arrayedEquation) {
+        int i=0;
+        while(i<arrayedEquation.size()) {
+            if( arrayedEquation.get(i).equals("(") ){
+                int closingIndex = getClosingBraceletIndex(arrayedEquation,i);
+                ArrayList<String> recursiveArrayList = new ArrayList<>();
+                recursiveArrayList.addAll(arrayedEquation.subList(i+1,closingIndex));
+                int replacement = solveRecStep(recursiveArrayList);
+                int j = i;
+                while(j <= closingIndex) {
+                    arrayedEquation.remove(i);
+                    j++;
+                }
+                arrayedEquation.addAll(i,butcher(Integer.toString(replacement)));
+            }
+            i++;
+        }
+        return solveSimple(arrayedEquation);
+    }
+
+    private boolean braceletSolvable(ArrayList<String> arrayedEquation){
+        int braceletCounter = 0;
+        for(String character: arrayedEquation) {
+            if( character.equals("(")) {
+                braceletCounter++;
+            } else if(character.equals(")")) {
+                braceletCounter--;
+            }
+            if (braceletCounter<0){
+                solvable = false;
+                return false;
+            }
+        }
+        solvable = braceletCounter == 0;
+        return solvable;
+    }
+
+    private int getClosingBraceletIndex(ArrayList<String> arrayedEquation,int start){
+        int i=start+1;
+        int bracelets = 1;
+        while (bracelets!=0) {
+            if(arrayedEquation.get(i).equals(")")) {
+                bracelets--;
+            } else if(arrayedEquation.get(i).equals("(")) {
+                bracelets++;
+            }
+            i++;
+        }
+        return --i;
+    }
+
+    public boolean solvable(){
+        ArrayList<String> partEquation = butcher(equation);
+        return solvable(partEquation) && braceletSolvable(partEquation);
+    }
+
+    public boolean solvable(ArrayList<String> butcheredEquation) {
+
+        if(!braceletSolvable(butcheredEquation)){
+            return false;
+        }
+            if (butcheredEquation.stream().allMatch(element -> contains(element,numbers) || contains(element,operators))) {
             boolean ans = true;
-            ans = !(contains(butcheredEquation[0],operators) || contains(butcheredEquation[butcheredEquation.length-1],operators));
-            for (int i = 1; i < butcheredEquation.length-1; i++) {
+            ans = !(contains(butcheredEquation.get(0),operators) || contains(butcheredEquation.get(butcheredEquation.size()-1),operators));
+            for (int i = 1; i < butcheredEquation.size()-1; i++) {
                 if(!ans)
                     break;
-                if ( contains(butcheredEquation[i],operators)) {
-                    ans = (contains(butcheredEquation[i-1],numbers) && contains(butcheredEquation[i+1],numbers));
+                if ( contains(butcheredEquation.get(i),operators)) {
+                    ans = (contains(butcheredEquation.get(i-1),numbers) && contains(butcheredEquation.get(i+1),numbers));
                 }
             }
             setSolvable(ans);
@@ -66,47 +142,45 @@ public class Calculator {
         return false;
     }
 
-    public int solve(){
-        if (!solvable())
+    public int solveSimple(ArrayList<String> partEquation){
+        if (!solvable(partEquation))
             return 0;
 
-        LinkedList<String> butcheredEquation = new LinkedList<>();
-        butcheredEquation.addAll(Arrays.asList(equation.split("")));
-        fromDigitToNumber(butcheredEquation);
+        fromDigitToNumber(partEquation);
 
         int ans = 0;
         for(String operator: operators) {
             int i = 1;
-            while (i < butcheredEquation.size()) {
-                if (butcheredEquation.get(i).equals(operator)) {
-                    int previousNumber = Integer.parseInt(butcheredEquation.get(i - 1));
-                    int nextNumber = Integer.parseInt(butcheredEquation.get(i + 1));
+            while (i < partEquation.size()) {
+                if (partEquation.get(i).equals(operator)) {
+                    int previousNumber = Integer.parseInt(partEquation.get(i - 1));
+                    int nextNumber = Integer.parseInt(partEquation.get(i + 1));
                     switch (operator) {
                         case "*":
-                            butcheredEquation.set(i, (Integer.toString(previousNumber * nextNumber)));
+                            partEquation.set(i, (Integer.toString(previousNumber * nextNumber)));
                             break;
                         case "/":
-                            butcheredEquation.set(i, (Integer.toString(previousNumber / nextNumber)));
+                            partEquation.set(i, (Integer.toString(previousNumber / nextNumber)));
                             break;
                         case "+":
-                            butcheredEquation.set(i, (Integer.toString(previousNumber + nextNumber)));
+                            partEquation.set(i, (Integer.toString(previousNumber + nextNumber)));
                             break;
                         case "-":
-                            butcheredEquation.set(i, (Integer.toString(previousNumber - nextNumber)));
+                            partEquation.set(i, (Integer.toString(previousNumber - nextNumber)));
                             break;
                     }
-                    butcheredEquation.remove(i + 1);
-                    butcheredEquation.remove(i - 1);
+                    partEquation.remove(i + 1);
+                    partEquation.remove(i - 1);
                 } else {
                     i++;
                 }
             }
         }
-        answer = Integer.parseInt(butcheredEquation.get(0));
+        answer = Integer.parseInt(partEquation.get(0));
         return answer;
     }
 
-    public void fromDigitToNumber(LinkedList<String> butcheredEquation) {
+    public void fromDigitToNumber(ArrayList<String> butcheredEquation) {
         int i = 0;
         while(i+1 < butcheredEquation.size()){
             if(contains(butcheredEquation.get(i),numbers)) {

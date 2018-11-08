@@ -1,6 +1,5 @@
 package com.codecool.mrguinneapig.calculator;
 
-import com.codecool.mrguinneapig.calculator.Calculator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -48,11 +47,11 @@ public class CalculatorApplicationTests {
     @Test
     public void fromDigitToNumberOnlyOneDigit() {
         calculator = new Calculator();
-        LinkedList<String> test = new LinkedList<String>();
+        ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0"));
         calculator.fromDigitToNumber(test);
 
-        LinkedList<String> ans = new LinkedList<String>();
+        ArrayList<String> ans = new ArrayList<String>();
         ans.addAll(Arrays.asList("0"));
         Assert.assertEquals(ans,test);
     }
@@ -60,11 +59,11 @@ public class CalculatorApplicationTests {
     @Test
     public void fromDigitToNumberMultipleDigit() {
         calculator = new Calculator();
-        LinkedList<String> test = new LinkedList<String>();
+        ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","2","3"));
         calculator.fromDigitToNumber(test);
 
-        LinkedList<String> ans = new LinkedList<String>();
+        ArrayList<String> ans = new ArrayList<String>();
         ans.addAll(Arrays.asList("0123"));
         Assert.assertEquals(ans,test);
     }
@@ -72,11 +71,11 @@ public class CalculatorApplicationTests {
     @Test
     public void fromDigitToNumberOnlyOneLetter() {
         calculator = new Calculator();
-        LinkedList<String> test = new LinkedList<String>();
+        ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("f"));
         calculator.fromDigitToNumber(test);
 
-        LinkedList<String> ans = new LinkedList<String>();
+        ArrayList<String> ans = new ArrayList<String>();
         ans.addAll(Arrays.asList("f"));
         Assert.assertEquals(ans,test);
     }
@@ -84,11 +83,11 @@ public class CalculatorApplicationTests {
     @Test
     public void fromDigitToNumber01f23j45() {
         calculator = new Calculator();
-        LinkedList<String> test = new LinkedList<String>();
+        ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","f","2","3","j","4","5"));
         calculator.fromDigitToNumber(test);
 
-        LinkedList<String> ans = new LinkedList<String>();
+        ArrayList<String> ans = new ArrayList<String>();
         ans.addAll(Arrays.asList("01","f","23","j","45"));
         Assert.assertEquals(ans,test);
     }
@@ -96,11 +95,11 @@ public class CalculatorApplicationTests {
     @Test
     public void fromDigitToNumber01fj45() {
         calculator = new Calculator();
-        LinkedList<String> test = new LinkedList<String>();
+        ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","f","j","4","5"));
         calculator.fromDigitToNumber(test);
 
-        LinkedList<String> ans = new LinkedList<String>();
+        ArrayList<String> ans = new ArrayList<String>();
         ans.addAll(Arrays.asList("01","f","j","45"));
         Assert.assertEquals(ans,test);
     }
@@ -108,11 +107,11 @@ public class CalculatorApplicationTests {
     @Test
     public void fromDigitToNumberfj01fj45() {
         calculator = new Calculator();
-        LinkedList<String> test = new LinkedList<String>();
+        ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("f","j","0","1","f","j","4","5"));
         calculator.fromDigitToNumber(test);
 
-        LinkedList<String> ans = new LinkedList<String>();
+        ArrayList<String> ans = new ArrayList<String>();
         ans.addAll(Arrays.asList("f","j","01","f","j","45"));
         Assert.assertEquals(ans,test);
     }
@@ -120,11 +119,11 @@ public class CalculatorApplicationTests {
     @Test
     public void fromDigitToNumber01fj45fj() {
         calculator = new Calculator();
-        LinkedList<String> test = new LinkedList<String>();
+        ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","f","j","4","5","f","j"));
         calculator.fromDigitToNumber(test);
 
-        LinkedList<String> ans = new LinkedList<String>();
+        ArrayList<String> ans = new ArrayList<String>();
         ans.addAll(Arrays.asList("01","f","j","45","f","j"));
         Assert.assertEquals(ans,test);
     }
@@ -205,6 +204,52 @@ public class CalculatorApplicationTests {
         calculator.setEquation("   15 +  3 *  2   -   1 -  100     ");
         Assert.assertEquals(-80,calculator.solve());
     }
+
+    @Test
+    public void calculatorBraceletTest() {
+        calculator = new Calculator();
+        calculator.setEquation("(15)");
+        Assert.assertEquals(15,calculator.solve());
+    }
+
+    @Test
+    public void calculatorBraceletception() {
+        calculator = new Calculator();
+        calculator.setEquation("((((15))))");
+        Assert.assertEquals(15,calculator.solve());
+    }
+
+    @Test
+    public void calculatorComplicatedBracelet() {
+        calculator = new Calculator();
+        calculator.setEquation("((1+2)*(1+2)*(1+2))+1");
+        Assert.assertEquals(28,calculator.solve());
+    }
+
+    @Test
+    public void calculatorTrueComplicatedBracelet() {
+        calculator = new Calculator();
+        calculator.setEquation("((1+2)*(1+2)*(1+2))+1");
+        calculator.solve();
+        Assert.assertTrue(calculator.isSolvable());
+    }
+
+    @Test
+    public void calculatorFalseComplicatedBracelet() {
+        calculator = new Calculator();
+        calculator.setEquation("(((1+2)*(1+2)*(1+2))+1");
+        calculator.solve();
+        Assert.assertFalse(calculator.isSolvable());
+    }
+
+    @Test
+    public void calculatorComplicatedBracelet2() {
+        calculator = new Calculator();
+        calculator.setEquation("((1+2+(1+2*2))*(1+2)*(1+2))+1+(3+2*2)");
+        Assert.assertEquals(80,calculator.solve());
+    }
+
+
 
 
 
