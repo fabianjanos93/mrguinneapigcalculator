@@ -40,6 +40,8 @@ public class Calculator {
 
     public int solve() {
 
+        this.solvable = true;
+
         ArrayList<String> partEquation = butcher(equation);
 
         formalize(partEquation);
@@ -136,7 +138,8 @@ public class Calculator {
                     ans = (contains(butcheredEquation.get(i-1),numbers) && contains(butcheredEquation.get(i+1),numbers));
                 }
             }
-            setSolvable(ans);
+            if (!ans)
+                setSolvable(ans);
             return ans;
         }
         setSolvable(false);

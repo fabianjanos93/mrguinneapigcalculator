@@ -1,7 +1,10 @@
 package com.codecool.mrguinneapig.calculator;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -16,37 +19,36 @@ public class CalculatorApplicationTests {
 
     Calculator calculator;
 
+    @Before
+    public void init() {
+        calculator = new Calculator();
+    }
     @Test
     public void contains0True() {
-        calculator = new Calculator();
         String[] testArray = new String[]{"0","1","2"};
         Assert.assertEquals(true,calculator.contains("0", testArray));
     }
 
     @Test
     public void contains1True() {
-        calculator = new Calculator();
         String[] testArray = new String[]{"0","1","2"};
         Assert.assertEquals(true,calculator.contains("1", testArray));
     }
 
     @Test
     public void contains2True() {
-        calculator = new Calculator();
         String[] testArray = new String[]{"0","1","2"};
         Assert.assertEquals(true,calculator.contains("2", testArray));
     }
 
     @Test
     public void contains3False() {
-        calculator = new Calculator();
         String[] testArray = new String[]{"0","1","2"};
         Assert.assertEquals(false,calculator.contains("3", testArray));
     }
 
     @Test
     public void fromDigitToNumberOnlyOneDigit() {
-        calculator = new Calculator();
         ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0"));
         calculator.fromDigitToNumber(test);
@@ -58,7 +60,6 @@ public class CalculatorApplicationTests {
 
     @Test
     public void fromDigitToNumberMultipleDigit() {
-        calculator = new Calculator();
         ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","2","3"));
         calculator.fromDigitToNumber(test);
@@ -70,7 +71,6 @@ public class CalculatorApplicationTests {
 
     @Test
     public void fromDigitToNumberOnlyOneLetter() {
-        calculator = new Calculator();
         ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("f"));
         calculator.fromDigitToNumber(test);
@@ -82,7 +82,6 @@ public class CalculatorApplicationTests {
 
     @Test
     public void fromDigitToNumber01f23j45() {
-        calculator = new Calculator();
         ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","f","2","3","j","4","5"));
         calculator.fromDigitToNumber(test);
@@ -94,7 +93,6 @@ public class CalculatorApplicationTests {
 
     @Test
     public void fromDigitToNumber01fj45() {
-        calculator = new Calculator();
         ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","f","j","4","5"));
         calculator.fromDigitToNumber(test);
@@ -106,7 +104,6 @@ public class CalculatorApplicationTests {
 
     @Test
     public void fromDigitToNumberfj01fj45() {
-        calculator = new Calculator();
         ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("f","j","0","1","f","j","4","5"));
         calculator.fromDigitToNumber(test);
@@ -118,7 +115,6 @@ public class CalculatorApplicationTests {
 
     @Test
     public void fromDigitToNumber01fj45fj() {
-        calculator = new Calculator();
         ArrayList<String> test = new ArrayList<String>();
         test.addAll(Arrays.asList("0","1","f","j","4","5","f","j"));
         calculator.fromDigitToNumber(test);
@@ -130,105 +126,90 @@ public class CalculatorApplicationTests {
 
     @Test
     public void solvabletrue1122354() {
-        calculator = new Calculator();
         calculator.setEquation("1122354");
         Assert.assertEquals(true,calculator.solvable());
     }
 
     @Test
     public void solvableTrue11plus22plus354() {
-        calculator = new Calculator();
         calculator.setEquation("11+22+354");
         Assert.assertEquals(true,calculator.solvable());
     }
 
     @Test
     public void solvableTrue11minus22minus354() {
-        calculator = new Calculator();
         calculator.setEquation("11-22-354");
         Assert.assertEquals(true,calculator.solvable());
     }
 
     @Test
     public void solvableTrue11divide22divide354() {
-        calculator = new Calculator();
         calculator.setEquation("11/22/354");
         Assert.assertEquals(true,calculator.solvable());
     }
 
     @Test
     public void solvableTrue11multiply22multiply354() {
-        calculator = new Calculator();
         calculator.setEquation("11*22*354");
         Assert.assertEquals(true,calculator.solvable());
     }
 
     @Test
     public void solvableFalse11multiplymultiply354() {
-        calculator = new Calculator();
         calculator.setEquation("11**354");
         Assert.assertEquals(false,calculator.solvable());
     }
 
     @Test
     public void solvableFalse11multiply354multiply() {
-        calculator = new Calculator();
         calculator.setEquation("11*354*");
         Assert.assertEquals(false,calculator.solvable());
     }
 
     @Test
     public void solvableFalsemultiply11multiply354() {
-        calculator = new Calculator();
         calculator.setEquation("*11*354");
         Assert.assertEquals(false,calculator.solvable());
     }
 
     @Test
     public void calculator15plus3multipy2minus1() {
-        calculator = new Calculator();
         calculator.setEquation("15+3*2-1");
         Assert.assertEquals(20,calculator.solve());
     }
 
     @Test
     public void calculatorNegative15plus3multipy2minus1minus100() {
-        calculator = new Calculator();
         calculator.setEquation("15+3*2-1-100");
         Assert.assertEquals(-80,calculator.solve());
     }
 
     @Test
     public void calculatorLotOfSpaces() {
-        calculator = new Calculator();
         calculator.setEquation("   15 +  3 *  2   -   1 -  100     ");
         Assert.assertEquals(-80,calculator.solve());
     }
 
     @Test
     public void calculatorBraceletTest() {
-        calculator = new Calculator();
         calculator.setEquation("(15)");
         Assert.assertEquals(15,calculator.solve());
     }
 
     @Test
     public void calculatorBraceletception() {
-        calculator = new Calculator();
         calculator.setEquation("((((15))))");
         Assert.assertEquals(15,calculator.solve());
     }
 
     @Test
     public void calculatorComplicatedBracelet() {
-        calculator = new Calculator();
         calculator.setEquation("((1+2)*(1+2)*(1+2))+1");
         Assert.assertEquals(28,calculator.solve());
     }
 
     @Test
     public void calculatorTrueComplicatedBracelet() {
-        calculator = new Calculator();
         calculator.setEquation("((1+2)*(1+2)*(1+2))+1");
         calculator.solve();
         Assert.assertTrue(calculator.isSolvable());
@@ -236,7 +217,6 @@ public class CalculatorApplicationTests {
 
     @Test
     public void calculatorFalseComplicatedBracelet() {
-        calculator = new Calculator();
         calculator.setEquation("(((1+2)*(1+2)*(1+2))+1");
         calculator.solve();
         Assert.assertFalse(calculator.isSolvable());
@@ -244,14 +224,12 @@ public class CalculatorApplicationTests {
 
     @Test
     public void calculatorComplicatedBracelet2() {
-        calculator = new Calculator();
         calculator.setEquation("((1+2+(1+2*2))*(1+2)*(1+2))+1+(3+2*2)");
         Assert.assertEquals(80,calculator.solve());
     }
 
     @Test
     public void calculatorLazyWriting() {
-        calculator = new Calculator();
         calculator.setEquation("3+4(2/2)");
         Assert.assertEquals(7,calculator.solve());
     }
