@@ -235,10 +235,16 @@ public class CalculatorApplicationTests {
     }
 
     @Test
-    public void calculator() {
+    public void calculatorFloatRecognition() {
         Assert.assertTrue(calculator.isNumeric("3.0"));
     }
 
+    @Test
+    public void calculatorFloatTest() {
+        calculator.setEquation("1/3");
+        Assert.assertEquals(0.333,calculator.solve(),0.001);
+    }
+    
 
 
 }
